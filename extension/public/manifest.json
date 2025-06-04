@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Sentiment Analyzr",
+  "version": "1.0.0",
+  "description": "Analyze the sentiment and motivation of any web page.",
+  "permissions": ["sidePanel", "scripting", "activeTab", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "action": {
+    "default_title": "Sentiment Analyzr"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

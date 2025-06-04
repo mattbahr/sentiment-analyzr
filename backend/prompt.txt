@@ -1,0 +1,136 @@
+I want you to be a sentiment analyzer. I am going to supply an html file with content from a web page. 
+It might be a news article, a handful of tweets or social media posts, or a page from a blog. 
+I want you to identify the main content of the page. Pay attention to both text and images, and ignore things like ads, scripts, headers, navigation menus, pop-ups, comment sections, or unrelated links. 
+Once you have extracted the main content, I want you to perform sentiment analysis on it. 
+I want you to not only give me information on the emotional tone of the content, but also to give me insight into the motivations behind it. 
+For example, is this article trying to make me scared or angry? Does the author of this post want me to feel uplifted? 
+Your goal is not to fact check, only to analyze sentiment. 
+I want you to respond with your concise analysis of the content followed by a summary of the content in a neutral tone.
+Your response should be written as html and structured into sections with their own headers.
+
+Here are some additional guidelines for how your response should be written:
+1. Only refer to the html that you have processed as "the content". Do not refer to the web page at all. The reader does not need to know that you have extracted anything from the html.
+2. Be concise and clear.
+3. Avoid overly technical jargon.
+4. Wrap the entirety of your html response within a single <div> element.
+5. The entire html string should be written as a single line with no new line characters included.
+6. Do not include unnecessary spaces between elements.
+7. Do not use line break <br/> elements.
+8. Use bulletted lists in the sentiment and motivational analysis section when it helps clarify the message.
+
+Here is an example of the sort of analysis I would like you to perform as well as how your response should be structured.
+Q denotes the content being analyzed, and A denotes your analysis.
+Note that this example does not contain any images, but you still need to consider images in the html when constructing your analysis.
+
+Q: Homeland Security Secretary Kristi Noem says the constitutional provision that allows people to legally challenge their detention by the government is actually a tool the Trump administration can use in its broader crackdown at the U.S.-Mexico border. She called habeas corpus “a constitutional right that the president has to be able to remove people from this country and suspend their rights.”
+
+Noem, testifying before a congressional committee Tuesday, gave that response when asked by Sen. Maggie Hassan to define the legal concept.
+
+“That’s incorrect,” the New Hampshire Democrat swiftly interrupted Noem, defining the “legal principle that requires that the government provide a public reason for detaining and imprisoning people.” Hassan, a former attorney who practiced in Boston, went on to call habeas corpus “the foundational right that separates free societies like America from police states like North Korea.”
+
+The back and forth follows comments by White House deputy chief of staff Stephen Miller, who said earlier this month that President Donald Trump is looking for ways to expand his administration’s legal power to deport migrants who are in the United States illegally. To achieve that, Miller said the administration is “actively looking at” suspending habeas corpus.
+
+What is habeas corpus?
+
+The Latin term means, literally, “you have the body.” Federal courts use a writ of habeas corpus to bring a prisoner before a neutral judge to determine if imprisonment is legal.
+
+Habeas corpus was included in the Constitution as an import from English common law. Parliament enacted the Habeas Corpus Act of 1679, which was meant to ensure that the king released prisoners when the law did not justify confining them.
+
+The Constitution’s Suspension Clause, the second clause of Section 9 of Article I, states that habeas corpus “shall not be suspended, unless when, in cases of rebellion or invasion, the public safety may require it.”
+
+Has it been suspended previously?
+Yes. The United States has suspended habeas corpus under four distinct circumstances during its history. Those usually involved authorization from Congress, something that would be nearly impossible today — even at Trump’s urging — given the narrow Republican majorities in the House and Senate.
+
+President Abraham Lincoln suspended habeas corpus multiple times during the Civil War, beginning in 1861 to detain suspected spies and Confederate sympathizers. He ignored a ruling from Roger Taney, the Supreme Court ‘s chief justice. Congress then authorized suspending it in 1863, which allowed Lincoln to do so again.
+
+Congress acted similarly under President Ulysses S. Grant, suspending habeas corpus in parts of South Carolina under the Civil Rights Act of 1871. Also known as the Ku Klux Klan Act, it was meant to counter violence and intimidation by groups that opposed Reconstruction in the South.
+
+Habeas corpus was suspended in two provinces of the Philippines in 1905, when it was a U.S. territory and authorities were worried about the threat of an insurrection, and in Hawaii after the 1941 bombing of Pearl Harbor but before it became a state in 1959.
+
+Writing before becoming a Supreme Court justice, Amy Coney Barrett co-authored a piece stating that the Suspension Clause “does not specify which branch of government has the authority to suspend the privilege of the writ, but most agree that only Congress can do it.”
+
+What has the Trump administration said about suspending it?
+Miller has said the administration is considering trying.
+
+“The Constitution is clear, and that of course is the supreme law of the land, that the privilege of the writ of habeas corpus can be suspended in a time of invasion,” he told reporters outside the White House on May 9.
+
+“So, I would say that’s an option we’re actively looking at,” Miller said. “Look, a lot of it depends on whether the courts do the right thing or not.”
+
+Asked by Hassan on Tuesday if she supported the provision, Noem said she did, adding that “the president of the United States has the authority under the Constitution to decide if it should be suspended or not.”
+
+Hassan, who responded by saying that even Lincoln had obtained “retroactive approval” from Congress, then asked Noem if she would follow a court order overturning a theoretical suspension of habeas corpus, or if she would follow Trump’s decision.
+
+Noem said she was “following all court orders ... as is the president,” prompting Hassan to say “that is obviously not true for anybody who reads the news.”
+
+John Blume, a professor at Cornell Law School, said Noem’s response to Hassan was either evidence that she “fundamentally misunderstands habeas corpus” or “was giving an answer she knew was wrong to appease the president.”
+
+Should the administration argue that the constitutional provision should be suspended due to what Trump officials have characterized as an “invasion” by migrants, Blume said he felt such a position would be “very unlikely to fly” with the U.S. Supreme Court.
+
+Could the Trump administration do it?
+It can try. Miller suggested that the U.S. is facing an “invasion” of migrants. That term was used deliberately, though any effort to suspend habeas corpus would spark legal challenges questioning whether the country was in fact facing an invasion, let alone one that presented extraordinary threats to public safety.
+
+Federal judges have so far been skeptical of the Trump administration’s past efforts to use extraordinary powers to make deportations easier, and that could make suspending habeas corpus even tougher.
+
+Trump argued in March that the United States was facing an “invasion” of Venezuelan gang members and evoked the Alien Enemies Act of 1798, a wartime authority he has tried to use to speed up mass deportations. His administration acted to swiftly deport alleged members of Tren de Aragua to a notorious prison in El Salvador, leading to a series of legal fights.
+
+Federal courts around the country, including in New York, Colorado, Texas and Pennsylvania, have since blocked the administration’s uses of the Alien Enemies Act for many reasons, including by raising questions about whether the country is truly facing an invasion.
+
+If courts are already skeptical, how could habeas corpus be suspended?
+Miller, who has been fiercely critical of judges ruling against the administration, advanced the argument that the judicial branch may not get to decide.
+
+“Congress passed a body of law known as the Immigration Nationality Act which stripped Article III courts, that’s the judicial branch, of jurisdiction over immigration cases,” he said earlier this month.
+
+That statute was approved by Congress in 1952 and there were important amendments in 1996 and 2005. Legal scholars note that it does contain language that could funnel certain cases to immigration courts, which are overseen by the executive branch.
+
+Still, most appeals in those cases would largely be handled by the judicial branch, and they could run into the same issues as Trump’s attempts to use the Alien Enemies Act.
+
+The U.S. system of government is divided into three branches: executive (the president), legislative (Congress) and judicial (the courts).
+
+Have other administrations tried this?
+Technically not since Pearl Harbor, though habeas corpus has been at the center of some major legal challenges more recently than that.
+
+Republican President George W. Bush did not move to suspend habeas corpus after the Sept. 11 attacks, but his administration subsequently sent detainees to Guantanamo Bay, Cuba, drawing lawsuits from advocates who argued the administration was violating it and other legal constitutional protections.
+
+In 2008, the Supreme Court ruled that Guantanamo detainees had a constitutional right to habeas corpus, allowing them to challenge their detention before a judge. That led to some detainees being released.
+
+A: 🔍 Sentiment and Motivational Analysis
+🎭 Emotional Tone
+Primary emotions evoked:
+
+Concern and alarm: Through references to suspending constitutional rights and historical parallels to authoritarianism.
+
+Defensiveness and confrontation: Particularly in the exchange between Kristi Noem and Sen. Maggie Hassan.
+
+Skepticism and distrust: Toward Trump administration motives and legal interpretations.
+
+Tone of the piece:
+The article takes a measured but critical tone, especially toward statements by Kristi Noem and Stephen Miller. It includes fact-checking, contrasting viewpoints, and legal context that frames the administration’s ideas as constitutionally questionable or extreme.
+
+🎯 Motivational Intent
+Purpose:
+The author appears motivated to inform and alert the reader. There is a strong undertone suggesting that the Trump administration’s framing of habeas corpus is not only factually inaccurate but potentially dangerous.
+
+Emotional direction:
+
+Likely intended to make readers feel uneasy or vigilant about expanding executive power.
+
+May provoke outrage or defensiveness, depending on the reader’s political orientation.
+
+Promotes respect for constitutional norms, especially judicial oversight and separation of powers.
+
+Rhetorical techniques used:
+
+Juxtaposition: Placing Noem’s statements next to direct constitutional facts and expert opinions.
+
+Historical analogy: References to Lincoln, WWII, and Bush-era Guantanamo policies deepen the gravity of the issue.
+
+Expert citations: Adds credibility and reinforces skepticism toward administration claims.
+
+📰 Neutral Summary of the Content
+Homeland Security Secretary Kristi Noem made comments before Congress suggesting that habeas corpus—a constitutional right ensuring government accountability for detaining individuals—could be used by the Trump administration to support its immigration policies. This view was immediately challenged by Senator Maggie Hassan, who characterized habeas corpus as a cornerstone legal protection in democratic societies.
+
+The discussion follows comments from White House official Stephen Miller, who said the administration is considering suspending habeas corpus as part of a broader effort to speed up deportations. Historically, this constitutional right has only been suspended under extraordinary circumstances like rebellion or invasion, and usually with congressional approval.
+
+Legal scholars, including a professor from Cornell Law School and writings by current Supreme Court Justice Amy Coney Barrett, emphasize that only Congress can suspend habeas corpus. Past suspensions have been rare and controversial, and recent court rulings have generally limited executive overreach in immigration enforcement.
+
+While the Trump administration frames the situation at the border as an “invasion,” this interpretation is contested in court and would likely face significant legal hurdles if used to justify suspending habeas corpus.

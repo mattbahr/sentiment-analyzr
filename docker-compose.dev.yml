@@ -1,0 +1,50 @@
+name: sentiment-analyzr
+
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    command: /usr/src/app/node_modules/.bin/nodemon server.ts
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    secrets:
+      - openai_api_key
+      - mongodb_app_username
+      - mongodb_app_password
+    env_file: ./backend/.env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:8.0.9
+    restart: unless-stopped
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/mongodb_root_username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongodb_root_password
+    ports:
+      - "27017:27017"
+    secrets:
+      - mongodb_root_username
+      - mongodb_root_password
+    volumes:
+      - ./docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - data-volume:/data/db
+
+secrets:
+  openai_api_key:
+    file: ./.openai_api_key_secret
+  mongodb_app_username:
+    file: ./.mongodb_app_username_secret
+  mongodb_app_password:
+    file: ./.mongodb_app_password_secret
+  mongodb_root_username:
+    file: ./.mongodb_root_username_secret
+  mongodb_root_password:
+    file: ./.mongodb_root_password_secret
+
+volumes:
+  data-volume:

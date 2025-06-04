@@ -1,0 +1,6 @@
+.*_secret
+**/.env
+**/node_modules
+**/env.*
+.husky/_
+**/dist

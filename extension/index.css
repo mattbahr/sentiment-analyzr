@@ -1,0 +1,132 @@
+@import 'tailwindcss';
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #c4e7f9;
+}
+.container {
+  padding: 16px;
+}
+.analyzr-btn {
+  background: #447fa4;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 2em;
+  cursor: pointer;
+  margin-bottom: 20px;
+  opacity: 1;
+  filter: grayscale(0);
+}
+.analyzr-btn:disabled {
+  background: #5a74a1;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+.result {
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 1.5em;
+}
+h1 {
+  font-size: 1.8em;
+}
+h2 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.2em;
+}
+li {
+  display: list-item;
+  list-style-type: disc;
+  margin-left: 20px;
+}
+h1,
+h2,
+h3,
+p,
+ul {
+  margin-bottom: 8px;
+}
+.ellipsis-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  color: #143a81;
+  height: 48px;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ellipsis-loader.fade-enter-active,
+.ellipsis-loader.fade-enter-done {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ellipsis-loader.fade-exit,
+.ellipsis-loader.fade-exit-active {
+  opacity: 0;
+  pointer-events: none;
+}
+.ellipsis-loader span {
+  animation: ellipsis-bounce 1.2s infinite;
+  margin: 0 2px;
+}
+.ellipsis-loader span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.ellipsis-loader span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes ellipsis-bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+.typewriter {
+  font-family: inherit;
+  white-space: pre-wrap;
+  min-height: 2em;
+  border-right: none;
+  animation: none;
+}
+a {
+  color: #447fa4;
+}
+.fade-slide-enter {
+  opacity: 0;
+  transform: translateY(24px);
+  pointer-events: none;
+}
+.fade-slide-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+}
+.fade-slide-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-exit-active {
+  opacity: 0;
+  transform: translateY(-24px);
+  transition:
+    opacity 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}

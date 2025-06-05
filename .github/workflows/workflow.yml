@@ -5,16 +5,12 @@ on:
 permissions:
   contents: read
   packages: write
-env:
-  BACKEND_PORT: ${{ vars.BACKEND_PORT }}
-  MONGO_HOST: ${{ vars.MONGO_HOST }}
-  MONGO_PORT: ${{ vars.MONGO_PORT }}
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
     env:
-      EXPRESS_URI: ${{ vars.TEST_RUNNER_EXPRESS_URI }}
+      EXPRESS_URI: ${{ vars.EXPRESS_URI }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - name: Checkout Git Repository
@@ -25,8 +21,6 @@ jobs:
           node-version: lts/*
       - name: Write Backend Secrets
         run: bash ./scripts/write_backend_secrets.sh
-      - name: Write Backend Env File
-        run: bash ./scripts/write_backend_env.sh
       - name: Write Extension Env File
         run: bash ./scripts/write_env_json.sh
       - name: Start Containers
@@ -42,8 +36,6 @@ jobs:
     steps:
       - name: Checkout Git Repository
         uses: actions/checkout@v4
-      - name: Write Backend Env File
-        run: bash ./scripts/write_backend_env.sh
       - name: Build Image
         run: docker compose build
       - name: Github Container Registry Login

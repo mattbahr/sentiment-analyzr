@@ -4,9 +4,3 @@ services:
   backend:
     build: ./backend
     image: sentiment-analyzr-backend
-    container_name: sentiment-analyzr-backend
-    restart: unless-stopped
-    ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
-    volumes:
-      - ./backend/secrets:/run/secrets

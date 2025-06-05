@@ -7,7 +7,6 @@ services:
     command: npm start
     volumes: 
       - ./backend/secrets:/run/secrets
-    env_file: ./backend/.env
 
   frontend:
     build: ./extension

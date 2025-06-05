@@ -1,0 +1,17 @@
+name: sentiment-analyzr
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    command: npm start
+    volumes: 
+      - ./backend/secrets:/run/secrets
+    env_file: ./backend/.env
+
+  frontend:
+    build: ./extension
+    container_name: frontend
+    command: npm start
+    depends_on: 
+      - backend

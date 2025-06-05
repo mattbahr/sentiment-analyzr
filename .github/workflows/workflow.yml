@@ -1,0 +1,34 @@
+name: Sentiment Analyzr CI/CD
+on:
+  push:
+    branches: [master]
+env:
+  BACKEND_PORT: ${{ vars.BACKEND_PORT }}
+  MONGO_HOST: ${{ vars.MONGO_HOST }}
+  MONGO_PORT: ${{ vars.MONGO_PORT }}
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      EXPRESS_URI: ${{ vars.TEST_RUNNER_EXPRESS_URI }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v4
+      - name: Set Up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Write Backend Secrets
+        run: bash ./scripts/write_backend_secrets.sh
+      - name: Write Server Env File
+        run: bash ./scripts/write_backend_env.sh
+      - name: Write Extension Env File
+        run: bash ./scripts/write_env_json.sh
+      - name: Start Containers
+        run: docker compose -f ./docker-compose.ci.yml up -d
+      - name: Test Backend
+        run: docker exec backend npm run test:ci
+      - name: Test Extension
+        run: docker exec frontend npm run test:ci

@@ -13,7 +13,7 @@ describe('Register component unit tests', () => {
       local: {
         // @ts-ignore
         get: jest.fn((keys, callback) => {
-          callback({ openaiApiKey: null });
+          callback({ saTrialKey: null });
         }),
         set: jest.fn(),
         remove: jest.fn(),
@@ -22,7 +22,7 @@ describe('Register component unit tests', () => {
       sync: {
         // @ts-ignore
         get: jest.fn((keys, callback) => {
-          callback({ openaiApiKey: null });
+          callback({ saTrialKey: null });
         }),
         set: jest.fn(),
         remove: jest.fn(),
@@ -36,17 +36,17 @@ describe('Register component unit tests', () => {
     // Check if the form is rendered
     expect(screen.getByRole('form')).toBeInTheDocument();
 
-    // Check if the API key input is present
-    const apiKeyInput = screen.getByPlaceholderText(/api key/i);
-    expect(apiKeyInput).toBeInTheDocument();
+    // Check if the trial key input is present
+    const trialKeyInput = screen.getByPlaceholderText(/trial key/i);
+    expect(trialKeyInput).toBeInTheDocument();
 
     // Check if the register button is present
-    const registerButton = screen.getByRole('button', { name: /save api key/i });
+    const registerButton = screen.getByRole('button', { name: /save trial key/i });
     expect(registerButton).toBeDisabled();
 
-    // Simulate entering an API key
-    fireEvent.change(apiKeyInput, { target: { value: 'test-api-key' } });
-    expect(apiKeyInput).toHaveValue('test-api-key');
+    // Simulate entering an trial key
+    fireEvent.change(trialKeyInput, { target: { value: 'test-trial-key' } });
+    expect(trialKeyInput).toHaveValue('test-trial-key');
 
     await waitFor(() => {
       expect(registerButton).toBeEnabled();

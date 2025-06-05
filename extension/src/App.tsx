@@ -5,26 +5,26 @@ import envJSON from '../env.json';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
 function App() {
-  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
-  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [hasTrialKey, setHasTrialKey] = useState<boolean>(false);
+  const [trialKey, setTrialKey] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingKey, setLoadingKey] = useState<boolean>(true);
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
-    // Check for saved API key in local or sync storage
-    chrome.storage.local.get(['openaiApiKey'], (result) => {
-      if (result.openaiApiKey) {
-        setApiKey(result.openaiApiKey);
-        setHasApiKey(true);
+    // Check for saved trial key in local or sync storage
+    chrome.storage.local.get(['saTrialKey'], (result) => {
+      if (result.saTrialKey) {
+        setTrialKey(result.saTrialKey);
+        setHasTrialKey(true);
         setLoadingKey(false);
       } else {
-        chrome.storage.sync.get(['openaiApiKey'], (syncResult) => {
-          if (syncResult.openaiApiKey) {
-            setApiKey(syncResult.openaiApiKey);
-            setHasApiKey(true);
+        chrome.storage.sync.get(['saTrialKey'], (syncResult) => {
+          if (syncResult.saTrialKey) {
+            setTrialKey(syncResult.saTrialKey);
+            setHasTrialKey(true);
           } else {
-            setHasApiKey(false);
+            setHasTrialKey(false);
           }
 
           setLoadingKey(false);
@@ -35,17 +35,17 @@ function App() {
 
   const handleRegister = () => {
     // After registration, check for key again
-    chrome.storage.local.get(['openaiApiKey'], (result) => {
-      if (result.openaiApiKey) {
-        setApiKey(result.openaiApiKey);
-        setHasApiKey(true);
+    chrome.storage.local.get(['saTrialKey'], (result) => {
+      if (result.saTrialKey) {
+        setTrialKey(result.saTrialKey);
+        setHasTrialKey(true);
       } else {
-        chrome.storage.sync.get(['openaiApiKey'], (syncResult) => {
-          if (syncResult.openaiApiKey) {
-            setApiKey(syncResult.openaiApiKey);
-            setHasApiKey(true);
+        chrome.storage.sync.get(['saTrialKey'], (syncResult) => {
+          if (syncResult.saTrialKey) {
+            setTrialKey(syncResult.saTrialKey);
+            setHasTrialKey(true);
           } else {
-            setHasApiKey(false);
+            setHasTrialKey(false);
           }
         });
       }
@@ -55,10 +55,10 @@ function App() {
   const handleLogout = () => {
     // Cancel any pending analyze request (typewriter and fetch)
     window.dispatchEvent(new Event('analyzr-cancel'));
-    chrome.storage.local.remove(['openaiApiKey'], () => {
-      chrome.storage.sync.remove(['openaiApiKey'], () => {
-        setApiKey(null);
-        setHasApiKey(false);
+    chrome.storage.local.remove(['saTrialKey'], () => {
+      chrome.storage.sync.remove(['saTrialKey'], () => {
+        setTrialKey(null);
+        setHasTrialKey(false);
         setResult(null);
         setLoading(false);
       });
@@ -77,16 +77,16 @@ function App() {
         func: () => document.documentElement.outerHTML,
       })
       .then((res) => res[0].result);
-    // Get API key from state
-    let key = apiKey;
+    // Get trial key from state
+    let key = trialKey;
     if (!key) {
       // fallback: try to get from storage again
       key = await new Promise<string | null>((resolve) => {
-        chrome.storage.local.get(['openaiApiKey'], (result) => {
-          if (result.openaiApiKey) resolve(result.openaiApiKey);
+        chrome.storage.local.get(['saTrialKey'], (result) => {
+          if (result.saTrialKey) resolve(result.saTrialKey);
           else
-            chrome.storage.sync.get(['openaiApiKey'], (syncResult) =>
-              resolve(syncResult.openaiApiKey || null)
+            chrome.storage.sync.get(['saTrialKey'], (syncResult) =>
+              resolve(syncResult.saTrialKey || null)
             );
         });
       });
@@ -99,14 +99,16 @@ function App() {
       const response = await fetch(envJSON.REACT_APP_API_URL + '/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html, apiKey: key }),
+        body: JSON.stringify({ html, trialKey: key }),
         signal: abortController.signal,
       });
 
       setLoading(false);
       const errorMsg = '<div>We apologize, but we were unable to analyze the page content.</div>';
       const trialExpiredMsg =
-        '<div>Your trial has expired. Please log out and provide a valid OpenAI API key.</div>';
+        '<div>Your trial has expired. Thank you for using Sentiment Analyzr!</div>';
+      const invalidKeyMsg =
+        '<div>You have provided an invalid trial key. Please log out and follow the instructions on the registration page to receive a new trial key.</div>';
       if (response.ok) {
         const json = await response.json();
         let result = json.result;
@@ -128,6 +130,8 @@ function App() {
         setResult(result);
       } else if (response.status === 403) {
         setResult(trialExpiredMsg);
+      } else if (response.status === 401) {
+        setResult(invalidKeyMsg);
       } else {
         setResult(errorMsg);
       }
@@ -146,12 +150,12 @@ function App() {
     !loadingKey && (
       <SwitchTransition mode="out-in">
         <CSSTransition
-          key={hasApiKey ? 'analyze' : 'register'}
+          key={hasTrialKey ? 'analyze' : 'register'}
           timeout={350}
           classNames="fade-slide"
           unmountOnExit
         >
-          {hasApiKey ? (
+          {hasTrialKey ? (
             <Analysis
               loading={loading}
               result={result}

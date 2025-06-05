@@ -13,14 +13,14 @@ afterEach(() => {
 });
 
 describe('Analyze router unit tests', () => {
-  test('Should return 500 on missing apiKey', async () => {
-    const response = await request(App).post('/analyze').send({ html: '<p>test</p>' }); // No API key
+  test('Should return 500 on missing trialKey', async () => {
+    const response = await request(App).post('/analyze').send({ html: '<p>test</p>' }); // No trial key
     expect(response.status).toBe(500);
-    expect(response.body.error).toBe('Missing API key');
+    expect(response.body.error).toBe('Missing trial key');
   });
 
   test('Should return 500 on missing html', async () => {
-    const response = await request(App).post('/analyze').send({ apiKey: 'fake-api-key' }); // No HTML content
+    const response = await request(App).post('/analyze').send({ trialKey: 'fake-trial-key' }); // No HTML content
     expect(response.status).toBe(500);
     expect(response.body.error).toBe('Missing html');
   });
@@ -47,19 +47,36 @@ describe('Analyze router unit tests', () => {
 
     const response = await request(App).post('/analyze').send({
       html: '<p>test</p>',
-      apiKey: 'fake-api-key',
+      trialKey: 'fake-trial-key',
     });
 
     expect(response.status).toBe(403);
     expect(response.body.error).toBe('Trial expired');
   });
 
-  test('Should return 500 if getAssistantResponse returns falsy', async () => {
-    mockedOpenAIClient.getAssistantResponse.mockResolvedValueOnce(undefined);
+  test('Should return 401 if no trial found', async () => {
+    (Trial.findOne as jest.Mock).mockResolvedValueOnce(undefined);
 
     const response = await request(App).post('/analyze').send({
       html: '<p>test</p>',
-      apiKey: 'fake-api-key',
+      trialKey: 'fake-trial-key',
+    });
+
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Unauthorized - No trial found');
+  });
+
+  test('Should return 500 if getAssistantResponse returns falsy', async () => {
+    mockedOpenAIClient.getAssistantResponse.mockResolvedValueOnce(undefined);
+    (Trial.findOne as jest.Mock).mockResolvedValueOnce({
+      trialCount: 3,
+      email: 'test@example.com',
+      save: jest.fn(),
+    });
+
+    const response = await request(App).post('/analyze').send({
+      html: '<p>test</p>',
+      trialKey: 'fake-trial-key',
     });
     expect(response.status).toBe(500);
     expect(response.body.error).toBe('Failed to retrieve analysis from OpenAI.');
@@ -67,10 +84,15 @@ describe('Analyze router unit tests', () => {
 
   test('Should return 200 and result if getAssistantResponse returns value', async () => {
     mockedOpenAIClient.getAssistantResponse.mockResolvedValueOnce('analysis result');
+    (Trial.findOne as jest.Mock).mockResolvedValueOnce({
+      trialCount: 3,
+      email: 'test@example.com',
+      save: jest.fn(),
+    });
 
     const response = await request(App).post('/analyze').send({
       html: '<p>test</p>',
-      apiKey: 'fake-api-key',
+      trialKey: 'fake-trial-key',
     });
     expect(response.status).toBe(200);
     expect(response.body.result).toBe('analysis result');
@@ -84,7 +106,7 @@ describe('Analyze router unit tests', () => {
 
     const response = await request(App).post('/analyze').send({
       html: '<p>test</p>',
-      apiKey: 'fake-api-key',
+      trialKey: 'fake-trial-key',
     });
 
     expect(response.status).toBe(200);

@@ -5,19 +5,19 @@ interface RegisterProps {
 }
 
 const Register: React.FC<RegisterProps> = ({ onRegister }) => {
-  const [apiKey, setApiKey] = useState('');
+  const [trialKey, setTrialKey] = useState('');
   const [storageType, setStorageType] = useState<'local' | 'sync'>('local');
   const [error, setError] = useState('');
 
   useEffect(() => {
     // Try to load existing key
-    chrome.storage.local.get(['openaiApiKey'], (result) => {
-      if (result.openaiApiKey) {
-        setApiKey(result.openaiApiKey);
+    chrome.storage.local.get(['saTrialKey'], (result) => {
+      if (result.saTrialKey) {
+        setTrialKey(result.saTrialKey);
       } else {
-        chrome.storage.sync.get(['openaiApiKey'], (syncResult) => {
-          if (syncResult.openaiApiKey) {
-            setApiKey(syncResult.openaiApiKey);
+        chrome.storage.sync.get(['saTrialKey'], (syncResult) => {
+          if (syncResult.saTrialKey) {
+            setTrialKey(syncResult.saTrialKey);
           }
         });
       }
@@ -26,18 +26,18 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!apiKey.trim()) {
-      setError('API key is required');
+    if (!trialKey.trim()) {
+      setError('Trial key is required');
       return;
     }
     setError('');
     const storage = storageType === 'local' ? chrome.storage.local : chrome.storage.sync;
-    storage.set({ openaiApiKey: apiKey.trim() }, () => {
+    storage.set({ saTrialKey: trialKey.trim() }, () => {
       onRegister();
     });
   };
 
-  const isFormValid = apiKey.trim() !== '' && (storageType === 'local' || storageType === 'sync');
+  const isFormValid = trialKey.trim() !== '' && (storageType === 'local' || storageType === 'sync');
 
   return (
     <form role="form" className="register-form container" onSubmit={handleSubmit}>
@@ -45,16 +45,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
         <p>
           Sentiment Analyzr uses GPT to analyze the sentiment of any web page and responds with a
           detailed report which includes a neutralized summary of the page content. It works great
-          on news articles, blog posts, social media threads, political cartoons, etc. It does not
-          currently analyze video or audio data. While Sentiment Analyzr is free to install and use,
-          you will need to supply your own OpenAI API key. Your key will be stored using Chrome's
-          Storage API. To set up an OpenAI API key, create an account on the{' '}
-          <u>
-            <a href="https://platform.openai.com/" target="_blank">
-              OpenAI Platform
-            </a>
-          </u>
-          . Alternatively, you may request a trial via{' '}
+          on news articles, blog posts, social media threads, political cartoons, etc. At this time,
+          it does not analyze video or audio data. Sentiment Analyzr is currently in beta. It is
+          only available to a limited number of trial users. You may request a trial via{' '}
           <u>
             <a href="mailto:mattbahr1992@gmail.com?subject=Sentiment Analyzr Trial Request">
               email
@@ -64,15 +57,15 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
         </p>
       </div>
       <div className="justify-center grid">
-        <h1>Register Your OpenAI API Key</h1>
+        <h1>Register Your Trial Key</h1>
       </div>
       <div className="justify-center grid mb-4">
         <input
           type="text"
-          placeholder="OpenAI API Key"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          className="api-key-input mb-2 text-lg border-2 rounded-md p-1 bg-white"
+          placeholder="Trial Key"
+          value={trialKey}
+          onChange={(e) => setTrialKey(e.target.value)}
+          className="trial-key-input mb-2 text-lg border-2 rounded-md p-1 bg-white"
         />
         <div className="storage-choice text-sm">
           <div>
@@ -110,7 +103,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
           className="analyzr-btn shadow-lg transition duration-150 ease-in-out hover:shadow-xl"
           disabled={!isFormValid}
         >
-          Save API Key
+          Save Trial Key
         </button>
       </div>
     </form>

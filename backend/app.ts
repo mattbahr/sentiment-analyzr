@@ -6,6 +6,7 @@ import { readFile, writeFile } from 'fs/promises';
 import tmp from 'tmp';
 import { getAssistantResponse } from './openai/openai_client.ts';
 import Trial from './models/trial.ts';
+import { error } from 'console';
 
 const logger = pino();
 
@@ -17,11 +18,11 @@ app.post('/analyze', async (req, res) => {
   logger.info(`${new Date().toISOString()} - Handling analyze request.`);
 
   try {
-    let { html, apiKey } = req.body;
+    const { html, trialKey } = req.body;
 
-    if (!apiKey) {
-      logger.error(`${new Date().toISOString()} - Missing API key in request body.`);
-      res.status(500).json({ error: 'Missing API key' });
+    if (!trialKey) {
+      logger.error(`${new Date().toISOString()} - Missing trial key in request body.`);
+      res.status(500).json({ error: 'Missing trial key' });
       return;
     }
 
@@ -31,23 +32,29 @@ app.post('/analyze', async (req, res) => {
       return;
     }
 
-    const token = apiKey.trim();
+    const token = trialKey.trim();
     const trial = await Trial.findOne({ token });
 
-    if (trial) {
-      if (trial.trialCount === 0) {
-        logger.info(`${new Date().toISOString()} - Trial expired for email: ${trial.email}`);
-        res.status(403).json({ error: 'Trial expired' });
-        return;
-      }
-
+    if (!trial) {
       logger.info(
-        `${new Date().toISOString()} - Trial found for email: ${trial.email}. ${trial.trialCount} ${trial.trialCount === 1 ? 'analysis' : 'analyses'} remaining.`
+        `${new Date().toISOString()} - No trial found for token: ${token}. Returning unauthorized.`
       );
-      trial.trialCount -= 1;
-      trial.save();
-      apiKey = (await readFile('/run/secrets/openai_api_key', 'utf8')).trim();
+      res.status(401).json({ error: 'Unauthorized - No trial found' });
+      return;
     }
+
+    if (trial.trialCount === 0) {
+      logger.info(`${new Date().toISOString()} - Trial expired for email: ${trial.email}`);
+      res.status(403).json({ error: 'Trial expired' });
+      return;
+    }
+
+    logger.info(
+      `${new Date().toISOString()} - Trial found for email: ${trial.email}. ${trial.trialCount} ${trial.trialCount === 1 ? 'analysis' : 'analyses'} remaining.`
+    );
+    trial.trialCount -= 1;
+    trial.save();
+    const apiKey = (await readFile('/run/secrets/openai_api_key', 'utf8')).trim();
 
     // Create a temporary file for the HTML content
     const tmpFile = tmp.file({ postfix: '.html' }, async (err, path) => {

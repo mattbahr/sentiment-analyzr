@@ -6,7 +6,7 @@ const mockedChrome = {
     local: {
       // @ts-ignore
       get: jest.fn((keys, callback) => {
-        callback({ openaiApiKey: 'test-api-key' });
+        callback({ saTrialKey: 'test-trial-key' });
       }),
     },
   },
@@ -30,7 +30,7 @@ describe('App component unit tests', () => {
         local: {
           // @ts-ignore
           get: jest.fn((keys, callback) => {
-            callback({ openaiApiKey: null });
+            callback({ saTrialKey: null });
           }),
           set: jest.fn(),
           remove: jest.fn(),
@@ -38,7 +38,7 @@ describe('App component unit tests', () => {
         sync: {
           // @ts-ignore
           get: jest.fn((keys, callback) => {
-            callback({ openaiApiKey: null });
+            callback({ saTrialKey: null });
           }),
           set: jest.fn(),
           remove: jest.fn(),
@@ -51,17 +51,17 @@ describe('App component unit tests', () => {
     // Check if the form is rendered
     expect(screen.getByRole('form')).toBeInTheDocument();
 
-    // Check if the API key input is present
-    const apiKeyInput = screen.getByPlaceholderText(/api key/i);
-    expect(apiKeyInput).toBeInTheDocument();
+    // Check if the trial key input is present
+    const trialKeyInput = screen.getByPlaceholderText(/trial key/i);
+    expect(trialKeyInput).toBeInTheDocument();
 
     // Check if the register button is present
-    const registerButton = screen.getByRole('button', { name: /save api key/i });
+    const registerButton = screen.getByRole('button', { name: /save trial key/i });
     expect(registerButton).toBeDisabled();
 
-    // Simulate entering an API key
-    fireEvent.change(apiKeyInput, { target: { value: 'test-api-key' } });
-    expect(apiKeyInput).toHaveValue('test-api-key');
+    // Simulate entering an trial key
+    fireEvent.change(trialKeyInput, { target: { value: 'test-trial-key' } });
+    expect(trialKeyInput).toHaveValue('test-trial-key');
 
     await waitFor(() => {
       expect(registerButton).toBeEnabled();
@@ -69,7 +69,7 @@ describe('App component unit tests', () => {
 
     // @ts-ignore
     global.chrome.storage.local.get = jest.fn((keys, callback) => {
-      callback({ openaiApiKey: 'test-api-key' });
+      callback({ saTrialKey: 'test-trial-key' });
     });
 
     // @ts-ignore
@@ -79,7 +79,7 @@ describe('App component unit tests', () => {
 
     // @ts-ignore
     global.chrome.storage.sync.get = jest.fn((keys, callback) => {
-      callback({ openaiApiKey: 'test-api-key' });
+      callback({ saTrialKey: 'test-trial-key' });
     });
 
     // @ts-ignore
@@ -92,7 +92,7 @@ describe('App component unit tests', () => {
 
     await waitFor(() => {
       expect(global.chrome.storage.local.set).toHaveBeenCalledWith(
-        { openaiApiKey: 'test-api-key' },
+        { saTrialKey: 'test-trial-key' },
         expect.any(Function)
       );
       const analyzeButton = screen.getByRole('button', { name: /analyze/i });
@@ -106,7 +106,7 @@ describe('App component unit tests', () => {
         local: {
           // @ts-ignore
           get: jest.fn((keys, callback) => {
-            callback({ openaiApiKey: 'test-api-key' });
+            callback({ saTrialKey: 'test-trial-key' });
           }),
           // @ts-ignore
           remove: jest.fn((keys, callback) => {
@@ -131,7 +131,7 @@ describe('App component unit tests', () => {
 
     await waitFor(() => {
       expect(global.chrome.storage.local.remove).toHaveBeenCalledWith(
-        ['openaiApiKey'],
+        ['saTrialKey'],
         expect.any(Function)
       );
       expect(screen.queryByRole('button', { name: /analyze/i })).not.toBeInTheDocument();
@@ -186,8 +186,34 @@ describe('App component unit tests', () => {
 
     await waitFor(() => {
       expect(
+        screen.getByText(/Your trial has expired. Thank you for using Sentiment Analyzr!/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  test('Test invalid trial key', async () => {
+    // @ts-ignore
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => Promise.resolve({ error: 'Unauthorized - No trial found' }),
+      })
+    );
+
+    // @ts-ignore
+    global.chrome = mockedChrome;
+
+    render(<App />);
+
+    const analyzeButton = screen.getByRole('button', { name: /analyze/i });
+    expect(analyzeButton).toBeInTheDocument();
+    fireEvent.click(analyzeButton);
+
+    await waitFor(() => {
+      expect(
         screen.getByText(
-          /Your trial has expired. Please log out and provide a valid OpenAI API key./i
+          /You have provided an invalid trial key. Please log out and follow the instructions on the registration page to receive a new trial key./i
         )
       ).toBeInTheDocument();
     });

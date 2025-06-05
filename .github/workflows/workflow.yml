@@ -2,6 +2,9 @@ name: Sentiment Analyzr CI/CD
 on:
   push:
     branches: [master]
+permissions:
+  contents: read
+  packages: write
 env:
   BACKEND_PORT: ${{ vars.BACKEND_PORT }}
   MONGO_HOST: ${{ vars.MONGO_HOST }}
@@ -22,7 +25,7 @@ jobs:
           node-version: lts/*
       - name: Write Backend Secrets
         run: bash ./scripts/write_backend_secrets.sh
-      - name: Write Server Env File
+      - name: Write Backend Env File
         run: bash ./scripts/write_backend_env.sh
       - name: Write Extension Env File
         run: bash ./scripts/write_env_json.sh
@@ -32,3 +35,20 @@ jobs:
         run: docker exec backend npm run test:ci
       - name: Test Extension
         run: docker exec frontend npm run test:ci
+  publish:
+    name: Publish
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v4
+      - name: Write Backend Env File
+        run: bash ./scripts/write_backend_env.sh
+      - name: Build Image
+        run: docker compose build
+      - name: Github Container Registry Login
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Tag Backend Docker Image
+        run: docker tag sentiment-analyzr-backend ghcr.io/${{ github.repository_owner }}/sentiment-analyzr-backend:latest
+      - name: Push Backend Docker Image
+        run: docker push ghcr.io/${{ github.repository_owner }}/sentiment-analyzr-backend:latest

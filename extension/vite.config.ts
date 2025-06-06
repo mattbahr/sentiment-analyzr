@@ -6,4 +6,12 @@ import manifest from './public/manifest.json';
 
 export default defineConfig({
   plugins: [react(), crx({ manifest }), tailwindcss()],
+  build: {
+    minify: false,
+    cssMinify: false,
+    terserOptions: {
+      compress: false,
+      mangle: false,
+    },
+  },
 });

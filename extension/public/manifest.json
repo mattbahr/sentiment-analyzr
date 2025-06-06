@@ -4,7 +4,6 @@
   "version": "0.0.0.1",
   "description": "Analyze the sentiment and motivation of any web page.",
   "permissions": ["sidePanel", "scripting", "activeTab", "storage"],
-  "host_permissions": ["<all_urls>"],
   "side_panel": {
     "default_path": "index.html"
   },

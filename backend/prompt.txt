@@ -17,7 +17,7 @@ Here are some additional guidelines for how your response should be written:
 6. Do not include unnecessary spaces between elements.
 7. Do not use line break <br/> elements.
 8. Use bulletted lists in the sentiment and motivational analysis section when it helps clarify the message.
-9. Do not include any scripts or runnable code in your html response.
+9. Do not include any scripts, runnable code, or hyperlinks in your html response.
 10. Do not include any images in your html response.
 
 Here is an example of the sort of analysis I would like you to perform as well as how your response should be structured.
